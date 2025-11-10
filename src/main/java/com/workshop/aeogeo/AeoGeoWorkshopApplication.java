@@ -23,6 +23,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @see <a href="README.md">README.md</a> for detailed instructions
  */
 @SpringBootApplication
+import org.springframework.scheduling.annotation.EnableAsync;
+@EnableAsync
 public class AeoGeoWorkshopApplication {
 
     public static void main(String[] args) {
