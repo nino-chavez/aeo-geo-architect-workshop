@@ -1,0 +1,45 @@
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment files (contain secrets)
+.env
+.env.local
+
+# Keep template files
+!.env.*
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Spring Boot
+spring.log
+
+# Database
+*.db
+*.sqlite
+
+# Node modules (if adding frontend)
+node_modules/
+dist/
+
+# Temporary files
+tmp/
+temp/

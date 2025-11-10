@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: aeo-geo-workshop
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/aeo_geo_workshop
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+
+  sql:
+    init:
+      mode: always
+
+server:
+  port: 8080
+
+# Logging
+logging:
+  level:
+    com.workshop.aeogeo: INFO
+    org.hibernate.SQL: DEBUG
+    org.springframework.web: INFO
+
+# Embedding Provider Configuration
+embedding:
+  provider: ${EMBEDDING_PROVIDER:precomputed}
+  fallback-to-precomputed: ${EMBEDDING_FALLBACK:true}
+
+---
+# Azure OpenAI Profile
+spring:
+  config:
+    activate:
+      on-profile: azure-openai
+
+embedding:
+  provider: azure-openai
+
+azure:
+  openai:
+    endpoint: ${AZURE_OPENAI_ENDPOINT}
+    api-key: ${AZURE_OPENAI_API_KEY}
+    deployment-name: ${AZURE_OPENAI_DEPLOYMENT:text-embedding-ada-002}
+
+---
+# Google Vertex AI Profile
+spring:
+  config:
+    activate:
+      on-profile: vertex-ai
+
+embedding:
+  provider: vertex-ai
+
+gcp:
+  project-id: ${GCP_PROJECT_ID}
+  location: ${GCP_LOCATION:us-central1}
+
+---
+# OpenAI (BYOK) Profile
+spring:
+  config:
+    activate:
+      on-profile: openai
+
+embedding:
+  provider: openai
+
+openai:
+  api-key: ${OPENAI_API_KEY}
+  model: ${OPENAI_MODEL:text-embedding-3-small}
+
+---
+# Ollama (Local) Profile
+spring:
+  config:
+    activate:
+      on-profile: ollama
+
+embedding:
+  provider: ollama
+
+ollama:
+  endpoint: ${OLLAMA_ENDPOINT:http://localhost:11434}
+  model: ${OLLAMA_MODEL:nomic-embed-text}
