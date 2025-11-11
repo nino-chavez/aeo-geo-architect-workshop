@@ -35,6 +35,8 @@ logging:
 embedding:
   provider: ${EMBEDDING_PROVIDER:precomputed}
   fallback-to-precomputed: ${EMBEDDING_FALLBACK:true}
+  precomputed:
+    file: classpath:embeddings/precomputed.json
 
 ---
 # Azure OpenAI Profile
