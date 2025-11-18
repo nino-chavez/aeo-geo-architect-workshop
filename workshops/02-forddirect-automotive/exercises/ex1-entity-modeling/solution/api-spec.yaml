@@ -1,0 +1,747 @@
+openapi: 3.0.3
+info:
+  title: FordDirect Dealer API
+  description: |
+    Centralized API for accessing Ford/Lincoln dealer data across 3,200 dealerships.
+    Powers AI search, Schema.org generation, and dealer visibility measurement.
+  version: 1.0.0
+  contact:
+    name: FordDirect API Team
+    email: api@forddirect.com
+
+servers:
+  - url: https://api.forddirect.com/v1
+    description: Production server
+  - url: http://localhost:8000/api
+    description: Local development server
+
+tags:
+  - name: dealers
+    description: Dealer CRUD operations
+  - name: locations
+    description: Dealer physical locations
+  - name: inventory
+    description: Vehicle inventory management
+  - name: schema
+    description: Schema.org JSON-LD generation
+  - name: search
+    description: Search and discovery
+  - name: readiness
+    description: AI readiness scoring
+
+paths:
+  # ==================== DEALERS ====================
+
+  /dealers:
+    get:
+      tags: [dealers]
+      summary: List dealers
+      description: Get a list of dealers, optionally filtered by location, type, or other criteria
+      parameters:
+        - name: zip
+          in: query
+          description: Filter by ZIP code
+          schema:
+            type: string
+            pattern: '^\d{5}$'
+        - name: radius_miles
+          in: query
+          description: Radius in miles from ZIP code
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+        - name: dealer_type
+          in: query
+          description: Filter by dealer type
+          schema:
+            type: string
+            enum: [metro, rural, specialty, dealership_group, ev_focused]
+        - name: brand
+          in: query
+          description: Filter by brand (Ford, Lincoln, or both)
+          schema:
+            type: string
+            enum: [Ford, Lincoln]
+        - name: limit
+          in: query
+          description: Maximum number of results
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Pagination offset
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of dealers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DealerSummary'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+    post:
+      tags: [dealers]
+      summary: Create a new dealer
+      description: Create a new dealer (admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DealerCreate'
+      responses:
+        '201':
+          description: Dealer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DealerDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /dealers/{dealer_id}:
+    get:
+      tags: [dealers]
+      summary: Get dealer details
+      description: Get complete information for a single dealer
+      parameters:
+        - $ref: '#/components/parameters/DealerId'
+      responses:
+        '200':
+          description: Dealer details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DealerDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [dealers]
+      summary: Update dealer
+      description: Update dealer information (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DealerId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DealerUpdate'
+      responses:
+        '200':
+          description: Dealer updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DealerDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dealers/{dealer_id}/schema:
+    get:
+      tags: [schema]
+      summary: Generate Schema.org JSON-LD for dealer
+      description: Dynamically generate Schema.org LocalBusiness + AutomotiveBusiness markup
+      parameters:
+        - $ref: '#/components/parameters/DealerId'
+        - name: include_inventory
+          in: query
+          description: Include featured inventory in schema
+          schema:
+            type: boolean
+            default: true
+        - name: max_inventory
+          in: query
+          description: Maximum number of inventory items to include
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10
+            default: 3
+      responses:
+        '200':
+          description: JSON-LD schema
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                description: Schema.org LocalBusiness + AutomotiveBusiness JSON-LD
+
+  /dealers/{dealer_id}/readiness:
+    get:
+      tags: [readiness]
+      summary: Get AI readiness score
+      description: Calculate how "AI-ready" this dealer's data is (0-100 score)
+      parameters:
+        - $ref: '#/components/parameters/DealerId'
+      responses:
+        '200':
+          description: Readiness score
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessScore'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== INVENTORY ====================
+
+  /dealers/{dealer_id}/inventory:
+    get:
+      tags: [inventory]
+      summary: Get dealer inventory
+      description: Get vehicles in stock at this dealer
+      parameters:
+        - $ref: '#/components/parameters/DealerId'
+        - name: make
+          in: query
+          schema:
+            type: string
+            enum: [Ford, Lincoln]
+        - name: model
+          in: query
+          schema:
+            type: string
+        - name: year
+          in: query
+          schema:
+            type: integer
+        - name: min_price
+          in: query
+          schema:
+            type: number
+            format: float
+        - name: max_price
+          in: query
+          schema:
+            type: number
+            format: float
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [in_stock, in_transit, sold, reserved]
+            default: in_stock
+      responses:
+        '200':
+          description: List of vehicles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VehicleInventory'
+
+  /inventory/{vin}:
+    get:
+      tags: [inventory]
+      summary: Get vehicle by VIN
+      description: Get detailed information for a specific vehicle
+      parameters:
+        - name: vin
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[A-HJ-NPR-Z0-9]{17}$'
+      responses:
+        '200':
+          description: Vehicle details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleInventory'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== SEARCH ====================
+
+  /search/dealers:
+    get:
+      tags: [search]
+      summary: Search dealers by location
+      description: Find dealers within a radius of coordinates or address
+      parameters:
+        - name: latitude
+          in: query
+          description: Latitude (required if using coordinates)
+          schema:
+            type: number
+            format: double
+        - name: longitude
+          in: query
+          description: Longitude (required if using coordinates)
+          schema:
+            type: number
+            format: double
+        - name: address
+          in: query
+          description: Address or ZIP code (alternative to lat/long)
+          schema:
+            type: string
+        - name: radius_miles
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        '200':
+          description: Dealers sorted by distance
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/DealerSummary'
+                        - type: object
+                          properties:
+                            distance_miles:
+                              type: number
+                              format: float
+
+  /search/inventory:
+    get:
+      tags: [search]
+      summary: Search inventory across all dealers
+      description: Find vehicles matching criteria across the dealer network
+      parameters:
+        - name: make
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [Ford, Lincoln]
+        - name: model
+          in: query
+          schema:
+            type: string
+        - name: year
+          in: query
+          schema:
+            type: integer
+        - name: max_price
+          in: query
+          schema:
+            type: number
+            format: float
+        - name: zip
+          in: query
+          description: Find inventory near this ZIP code
+          schema:
+            type: string
+        - name: radius_miles
+          in: query
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Matching vehicles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VehicleInventory'
+
+# ==================== COMPONENTS ====================
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    DealerId:
+      name: dealer_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    DealerSummary:
+      type: object
+      properties:
+        dealer_id:
+          type: string
+          format: uuid
+        legal_name:
+          type: string
+        dba_name:
+          type: string
+        dealer_code:
+          type: string
+        dealer_type:
+          type: string
+          enum: [metro, rural, specialty, dealership_group, ev_focused]
+        phone:
+          type: string
+        website_url:
+          type: string
+          format: uri
+        brands:
+          type: array
+          items:
+            type: string
+            enum: [Ford, Lincoln]
+        primary_location:
+          $ref: '#/components/schemas/LocationSummary'
+        aggregate_rating:
+          type: number
+          format: float
+          minimum: 1.0
+          maximum: 5.0
+        total_reviews:
+          type: integer
+
+    DealerDetail:
+      allOf:
+        - $ref: '#/components/schemas/DealerSummary'
+        - type: object
+          properties:
+            group_id:
+              type: string
+              format: uuid
+            email:
+              type: string
+              format: email
+            social_media:
+              type: object
+              properties:
+                facebook:
+                  type: string
+                  format: uri
+                twitter:
+                  type: string
+                  format: uri
+                instagram:
+                  type: string
+                  format: uri
+            all_locations:
+              type: array
+              items:
+                $ref: '#/components/schemas/Location'
+            service_capabilities:
+              type: array
+              items:
+                $ref: '#/components/schemas/ServiceCapability'
+            special_offerings:
+              type: array
+              items:
+                $ref: '#/components/schemas/SpecialOffering'
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+    DealerCreate:
+      type: object
+      required: [legal_name, dealer_code, dealer_type]
+      properties:
+        legal_name:
+          type: string
+        dba_name:
+          type: string
+        dealer_code:
+          type: string
+        dealer_type:
+          type: string
+          enum: [metro, rural, specialty, dealership_group, ev_focused]
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+        website_url:
+          type: string
+          format: uri
+        brands:
+          type: array
+          items:
+            type: string
+            enum: [Ford, Lincoln]
+
+    DealerUpdate:
+      type: object
+      properties:
+        legal_name:
+          type: string
+        dba_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+        website_url:
+          type: string
+          format: uri
+        social_media:
+          type: object
+
+    LocationSummary:
+      type: object
+      properties:
+        location_id:
+          type: string
+          format: uuid
+        address_line1:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+          maxLength: 2
+        zip:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+
+    Location:
+      allOf:
+        - $ref: '#/components/schemas/LocationSummary'
+        - type: object
+          properties:
+            address_line2:
+              type: string
+            country:
+              type: string
+              maxLength: 2
+            is_primary:
+              type: boolean
+            hours:
+              type: object
+              properties:
+                sales:
+                  type: object
+                service:
+                  type: object
+            amenities:
+              type: array
+              items:
+                type: string
+
+    VehicleInventory:
+      type: object
+      properties:
+        vin:
+          type: string
+        dealer_id:
+          type: string
+          format: uuid
+        year:
+          type: integer
+        make:
+          type: string
+        model:
+          type: string
+        trim:
+          type: string
+        exterior_color:
+          type: string
+        interior_color:
+          type: string
+        msrp:
+          type: number
+          format: float
+        dealer_price:
+          type: number
+          format: float
+        discount_amount:
+          type: number
+          format: float
+        status:
+          type: string
+          enum: [in_stock, in_transit, sold, reserved]
+        features:
+          type: array
+          items:
+            type: string
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+        days_in_inventory:
+          type: integer
+
+    ServiceCapability:
+      type: object
+      properties:
+        capability_id:
+          type: string
+          format: uuid
+        service_type:
+          type: string
+          enum: [maintenance, collision, ev_charging, commercial_fleet, body_shop, parts, tire_center]
+        is_certified:
+          type: boolean
+        certification_level:
+          type: string
+        description:
+          type: string
+
+    SpecialOffering:
+      type: object
+      properties:
+        offering_id:
+          type: string
+          format: uuid
+        offering_type:
+          type: string
+          enum: [fleet_sales, commercial_upfitting, ev_infrastructure, rental, trade_in_program]
+        name:
+          type: string
+        description:
+          type: string
+        is_active:
+          type: boolean
+
+    ReadinessScore:
+      type: object
+      properties:
+        overall_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Overall AI readiness score
+        factors:
+          type: object
+          properties:
+            schema_completeness:
+              type: integer
+              minimum: 0
+              maximum: 100
+              description: % of Schema.org fields populated
+            inventory_freshness:
+              type: integer
+              minimum: 0
+              maximum: 100
+              description: How fresh is inventory data
+            review_recency:
+              type: integer
+              minimum: 0
+              maximum: 100
+              description: Recency of customer reviews
+            unique_content_ratio:
+              type: integer
+              minimum: 0
+              maximum: 100
+              description: % of unique vs. syndicated content
+        recommendations:
+          type: array
+          items:
+            type: string
+          description: Actionable recommendations to improve score
+
+    PaginationMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+        has_more:
+          type: boolean
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "NOT_FOUND"
+              message: "Dealer not found"
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "UNAUTHORIZED"
+              message: "Authentication token required"
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "FORBIDDEN"
+              message: "Admin role required"

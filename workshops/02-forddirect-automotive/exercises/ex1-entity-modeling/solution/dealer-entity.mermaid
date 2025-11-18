@@ -1,0 +1,169 @@
+erDiagram
+    %% FordDirect Dealer Entity Registry - Complete Entity Relationship Diagram
+    %% This represents the full data model for 3,200 Ford/Lincoln dealers
+
+    %% === CORE ENTITIES ===
+
+    DEALER {
+        uuid dealer_id PK
+        string legal_name "Legal business name"
+        string dba_name "Doing Business As name"
+        string dealer_code UK "Unique FordDirect code"
+        string dealer_type "metro, rural, specialty, dealership_group, ev_focused"
+        string website_url
+        string phone
+        string email
+        jsonb social_media "Facebook, Twitter, Instagram URLs"
+        jsonb brands "Ford, Lincoln, or both"
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+        tsvector search_vector "Full-text search"
+    }
+
+    DEALERSHIP_GROUP {
+        uuid group_id PK
+        string group_name
+        string headquarters_city
+        string headquarters_state
+        int total_locations
+        string website_url
+        timestamp created_at
+    }
+
+    LOCATION {
+        uuid location_id PK
+        uuid dealer_id FK
+        string address_line1
+        string address_line2
+        string city
+        string state
+        string zip
+        string country "Default: US"
+        geography geo_point "PostGIS point (lat, long)"
+        boolean is_primary
+        jsonb hours "Sales and service hours by day"
+        jsonb amenities "WiFi, lounge, shuttle, etc."
+        timestamp created_at
+    }
+
+    VEHICLE_SPEC {
+        uuid spec_id PK
+        int year
+        string make "Ford or Lincoln"
+        string model "F-150, Mustang, Navigator, etc."
+        string trim "Lariat, XLT, Platinum, etc."
+        string body_type "Truck, SUV, Sedan, etc."
+        string drivetrain "4WD, AWD, RWD, FWD"
+        string engine "3.5L EcoBoost V6, etc."
+        decimal fuel_capacity_gallons
+        int mpg_city
+        int mpg_highway
+        int towing_capacity_lbs
+        int payload_capacity_lbs
+        int seating_capacity
+        jsonb standard_features
+        jsonb available_options
+        decimal base_msrp
+        timestamp created_at
+    }
+
+    INVENTORY {
+        string vin PK "Vehicle Identification Number"
+        uuid dealer_id FK
+        uuid spec_id FK "References VEHICLE_SPEC"
+        int year
+        string make
+        string model
+        string trim
+        string exterior_color
+        string interior_color
+        decimal msrp
+        decimal dealer_price
+        decimal discount_amount
+        string status "in_stock, in_transit, sold, reserved"
+        jsonb features "Specific features for this VIN"
+        jsonb images "Array of image URLs"
+        timestamp arrival_date
+        timestamp status_updated_at
+        int days_in_inventory "Computed: NOW() - arrival_date"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    REVIEW {
+        uuid review_id PK
+        uuid dealer_id FK
+        string source "google, yelp, dealerrater, edmunds, facebook"
+        string external_id "Source's review ID"
+        decimal rating "1.0 to 5.0"
+        text review_text
+        string author_name
+        date review_date
+        text dealer_response
+        date response_date
+        jsonb metadata "Source-specific data"
+        timestamp created_at
+    }
+
+    SERVICE_CAPABILITY {
+        uuid capability_id PK
+        uuid dealer_id FK
+        string service_type "maintenance, collision, ev_charging, commercial_fleet"
+        boolean is_certified "Ford-certified technicians"
+        string certification_level "Bronze, Silver, Gold, Platinum"
+        text description
+        jsonb equipment "Lifts, diagnostic tools, charging stations, etc."
+        jsonb hours "Service hours (may differ from sales)"
+        timestamp created_at
+    }
+
+    SPECIAL_OFFERING {
+        uuid offering_id PK
+        uuid dealer_id FK
+        string offering_type "fleet_sales, commercial_upfitting, ev_infrastructure, rental, trade_in_program"
+        string name
+        text description
+        boolean is_active
+        jsonb details "Type-specific metadata"
+        timestamp created_at
+    }
+
+    FINANCING_OPTION {
+        uuid financing_id PK
+        uuid dealer_id FK
+        string program_name "Ford Credit, Third-party, etc."
+        string program_type "lease, finance, cash_incentive"
+        decimal min_apr
+        decimal max_apr
+        int min_term_months
+        int max_term_months
+        text eligibility_requirements
+        date valid_from
+        date valid_through
+        timestamp created_at
+    }
+
+    %% === RELATIONSHIPS ===
+
+    DEALER }o--o| DEALERSHIP_GROUP : "belongs to"
+    DEALER ||--o{ LOCATION : "has"
+    DEALER ||--o{ INVENTORY : "stocks"
+    DEALER ||--o{ REVIEW : "receives"
+    DEALER ||--o{ SERVICE_CAPABILITY : "offers"
+    DEALER ||--o{ SPECIAL_OFFERING : "provides"
+    DEALER ||--o{ FINANCING_OPTION : "offers"
+
+    INVENTORY }o--|| VEHICLE_SPEC : "references"
+
+    %% === NOTES ===
+    %% 1. PostGIS is required for geo_point fields (geospatial queries)
+    %% 2. JSONB is used for flexible attributes that map to Schema.org
+    %% 3. tsvector is used for full-text search on dealer names
+    %% 4. All timestamps use NOW() as default
+    %% 5. Indexes should be added for:
+    %%    - dealer_id (foreign key lookups)
+    %%    - geo_point (geospatial proximity)
+    %%    - search_vector (full-text search)
+    %%    - vin (inventory lookups)
+    %%    - status (inventory filtering)

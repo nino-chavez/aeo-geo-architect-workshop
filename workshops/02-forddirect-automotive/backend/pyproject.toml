@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "forddirect-dealer-api"
+version = "1.0.0"
+description = "FordDirect Dealer API - AI Search Backend"
+authors = ["Project 3200 Workshop Team"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.104.0"
+uvicorn = {extras = ["standard"], version = "^0.24.0"}
+pydantic = "^2.5.0"
+sqlalchemy = "^2.0.23"
+psycopg2-binary = "^2.9.9"
+python-dotenv = "^1.0.0"
+openai = "^1.3.0"
+anthropic = "^0.7.0"
+google-cloud-aiplatform = "^1.38.0"
+aiohttp = "^3.9.0"
+pandas = "^2.1.3"
+plotly = "^5.18.0"
+streamlit = "^1.28.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.4.3"
+black = "^23.11.0"
+ruff = "^0.1.6"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

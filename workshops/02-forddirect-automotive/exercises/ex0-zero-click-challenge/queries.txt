@@ -1,0 +1,123 @@
+# Test Queries for Exercise 0: Zero-Click Challenge
+# Project 3200 - FordDirect AI Search Workshop
+#
+# Instructions: Copy these queries into ChatGPT, Perplexity, Gemini, and Claude
+# Record responses in baseline-audit-template.csv
+
+## Category 1: Inventory Search (Specific Vehicle)
+## Test if AI can find dealers with specific vehicles in stock
+
+Q001: I need to buy a Ford F-150 for my construction business this weekend. I'm located near Aurora, Colorado. Can you help me find a dealer that has a white F-150 Lariat in stock under $55,000?
+
+Q002: Find me a Ford dealership near Denver that has a 2024 Mustang Mach-E in stock, preferably in blue or gray.
+
+Q003: I'm looking for a Lincoln Aviator near Chicago. Which dealers have one in stock right now?
+
+Q004: Show me Ford dealers in the Dallas area with F-150 Lightning electric trucks available for immediate purchase.
+
+Q005: I need a Ford Explorer with 3rd row seating near Seattle. Which dealer has the best selection in stock?
+
+## Category 2: Service & Maintenance Queries
+## Test if AI knows about dealer service capabilities
+
+Q006: Which Ford dealer near me has the best service department for F-150 maintenance?
+
+Q007: I need to get my Ford Super Duty serviced. Which dealer in Phoenix has Saturday service hours?
+
+Q008: Find me a Lincoln dealer in Boston that offers mobile service or pickup/delivery for maintenance.
+
+Q009: Which Ford dealer near San Francisco specializes in commercial truck service and fleet maintenance?
+
+Q010: I have a Ford F-150 Lightning. Which dealer near Austin has certified EV technicians and charging stations?
+
+## Category 3: Dealer Comparison
+## Test if AI can compare dealers or make recommendations
+
+Q011: Compare Ford dealers in Aurora, CO vs Denver, CO. Which one has better customer reviews?
+
+Q012: What's the difference between a Ford dealer and a Ford-Lincoln dealer? Which should I go to for a used F-150?
+
+Q013: I'm equidistant between two Ford dealers. How do I choose which one to visit?
+
+Q014: Which Ford dealer in Los Angeles is best for first-time truck buyers who need help with financing?
+
+Q015: Compare online reviews for Ford dealers within 25 miles of Miami, Florida.
+
+## Category 4: Specialized/Commercial Queries
+## Test if AI knows about dealer specializations
+
+Q016: I need to buy 5 F-150s for my landscaping business. Which Ford dealer near Atlanta handles fleet sales?
+
+Q017: Find me a Ford dealer that sells upfitted commercial trucks (snow plows, utility beds) in the Northeast.
+
+Q018: Which Lincoln dealership offers the Lincoln Black Label experience near New York City?
+
+Q019: I want to test drive an F-150 Raptor. Which dealer near me has one available for test drives?
+
+Q020: Find a Ford dealer that specializes in off-road modifications and accessories for Broncos near Houston.
+
+---
+
+# TESTING PROTOCOL
+
+For each query:
+1. Copy the exact query text
+2. Paste into AI tool
+3. DO NOT add context or rephrase
+4. Record the FIRST response (before any follow-up questions)
+5. Note:
+   - Did it mention specific dealer names?
+   - Did it claim to know inventory?
+   - Did it admit limitations ("I can't access real-time data")?
+   - Did it give generic advice?
+   - Did anything seem inaccurate or made-up?
+
+# EXPECTED CHALLENGES
+
+- AI will often say "I don't have access to real-time inventory"
+- AI may give dealer names but no specific stock information
+- AI might hallucinate (make up dealer names or addresses)
+- Different AI tools will give different answers to the same question
+- Some AI tools will refuse to answer shopping queries
+
+# WHAT TO LOOK FOR
+
+✅ GOOD SIGNS:
+- AI mentions specific dealer names
+- AI provides accurate addresses/phone numbers
+- AI acknowledges its limitations
+- AI suggests ways to verify information
+
+⚠️ WARNING SIGNS:
+- AI claims to know current inventory (probably hallucinating)
+- AI gives outdated dealer names
+- AI is overly confident about details
+- AI provides no sources or citations
+
+❌ FAILURES:
+- AI refuses to answer
+- AI gives generic advice only ("Visit Ford.com")
+- AI completely makes up dealer information
+- AI contradicts itself
+
+---
+
+# BONUS QUERIES (If Time Permits)
+
+Test edge cases:
+- "Find the closest Ford dealer to ZIP code 80014"
+- "Which Ford dealers are open on Sunday?"
+- "I want to trade in my 2018 F-150. Where should I go?"
+- "Find me a Hispanic-owned Ford dealership" (diversity test)
+- "Which Ford dealer has the most 5-star Google reviews?"
+
+---
+
+# POST-EXERCISE REFLECTION
+
+After completing all queries, ask yourself:
+1. If I were a real customer, would I trust these AI responses?
+2. Which AI tool performed best? Why?
+3. What patterns did I notice across tools?
+4. If I owned a Ford dealership, how would this make me feel?
+5. What's ONE thing FordDirect could do to improve AI visibility?

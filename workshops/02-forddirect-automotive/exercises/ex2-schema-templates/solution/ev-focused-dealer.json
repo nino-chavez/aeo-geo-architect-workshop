@@ -1,0 +1,294 @@
+{
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "AutomotiveBusiness"],
+  "@id": "https://dealers.ford.com/palo-alto-ford-ev",
+
+  "name": "Palo Alto Ford Electric Vehicle Center",
+  "alternateName": "Palo Alto Ford EV",
+  "description": "California's premier Ford electric vehicle dealership specializing in F-150 Lightning and Mustang Mach-E. Featuring on-site fast charging, EV-certified technicians, and sustainable practices. Your electric future starts here.",
+
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "2990 El Camino Real",
+    "addressLocality": "Palo Alto",
+    "addressRegion": "CA",
+    "postalCode": "94306",
+    "addressCountry": "US"
+  },
+
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 37.4275,
+    "longitude": -122.1697
+  },
+
+  "telephone": "+1-650-555-0200",
+  "url": "https://paloaltofordev.com",
+
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "09:00",
+      "closes": "19:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Saturday",
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Sunday",
+      "opens": "11:00",
+      "closes": "17:00"
+    }
+  ],
+
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.8,
+    "reviewCount": 215
+  },
+
+  "priceRange": "$$$-$$$$",
+
+  "areaServed": {
+    "@type": "GeoCircle",
+    "geoMidpoint": {
+      "@type": "GeoCoordinates",
+      "latitude": 37.4275,
+      "longitude": -122.1697
+    },
+    "geoRadius": "75 miles"
+  },
+
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Vehicle",
+        "brand": {"@type": "Brand", "name": "Ford"},
+        "model": "F-150 Lightning",
+        "vehicleConfiguration": "Lariat",
+        "vehicleModelDate": "2024",
+        "sku": "1FTVW1EL0PWG12345",
+        "name": "2024 Ford F-150 Lightning Lariat",
+        "color": "Antimatter Blue",
+        "bodyType": "Crew Cab Pickup",
+        "fuelType": "Electric",
+        "driveWheelConfiguration": "Four-wheel drive",
+        "vehicleEngine": {
+          "@type": "EngineSpecification",
+          "name": "Dual Electric Motors",
+          "fuelType": "Electric"
+        },
+        "emissionsCO2": 0,
+        "mileageFromOdometer": {
+          "@type": "QuantitativeValue",
+          "value": 0,
+          "unitCode": "SMI"
+        },
+        "vehiclePowerToWeightRatio": {
+          "@type": "QuantitativeValue",
+          "value": 563,
+          "unitText": "horsepower"
+        },
+        "payload": {
+          "@type": "QuantitativeValue",
+          "value": 2000,
+          "unitCode": "LBR"
+        }
+      },
+      "price": "69995",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "eligibleQuantity": {
+        "@type": "QuantitativeValue",
+        "value": 8,
+        "unitText": "vehicles in stock"
+      },
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "priceCurrency": "USD",
+        "price": "69995",
+        "eligibleTransactionVolume": {
+          "@type": "QuantitativeValue",
+          "value": 7500,
+          "unitText": "Federal tax credit"
+        }
+      },
+      "validThrough": "2024-12-31"
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Vehicle",
+        "brand": {"@type": "Brand", "name": "Ford"},
+        "model": "Mustang Mach-E",
+        "vehicleConfiguration": "Premium",
+        "vehicleModelDate": "2024",
+        "fuelType": "Electric",
+        "bodyType": "SUV"
+      },
+      "price": "52800",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    }
+  ],
+
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Ford Electric Vehicle Inventory",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Vehicle",
+          "model": "F-150 Lightning"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Vehicle",
+          "model": "Mustang Mach-E"
+        }
+      }
+    ]
+  },
+
+  "amenityFeature": [
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Level 3 DC Fast Charging",
+      "value": true,
+      "description": "150kW DC fast charging available for customers"
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Level 2 Charging Stations",
+      "value": true,
+      "hoursAvailable": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "00:00",
+        "closes": "23:59"
+      }
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Solar Canopy",
+      "value": true,
+      "description": "Solar-powered charging infrastructure"
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "EV Test Drive Track",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Home Charger Installation Service",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Free WiFi",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Electric Shuttle Service",
+      "value": true,
+      "description": "Tesla shuttle for customer transportation"
+    }
+  ],
+
+  "potentialAction": [
+    {
+      "@type": "ScheduleAction",
+      "name": "Schedule EV Test Drive",
+      "description": "Book a test drive of the F-150 Lightning or Mach-E",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://paloaltofordev.com/test-drive",
+        "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]
+      }
+    },
+    {
+      "@type": "ScheduleAction",
+      "name": "Schedule EV Service",
+      "description": "Book service with EV-certified technicians",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://paloaltofordev.com/service/schedule",
+        "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]
+      }
+    },
+    {
+      "@type": "AssessAction",
+      "name": "Calculate EV Savings",
+      "description": "Compare EV vs gas costs and environmental impact",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://paloaltofordev.com/ev-calculator",
+        "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]
+      }
+    }
+  ],
+
+  "department": [
+    {
+      "@type": "AutoDealer",
+      "name": "EV Sales",
+      "telephone": "+1-650-555-0201",
+      "description": "Certified EV sales consultants specializing in electric Ford vehicles"
+    },
+    {
+      "@type": "AutoRepair",
+      "name": "EV Service Center",
+      "telephone": "+1-650-555-0202",
+      "description": "Ford-certified EV technicians trained on high-voltage systems",
+      "openingHours": "Mo-Fr 07:00-19:00, Sa 07:00-17:00",
+      "knowsAbout": [
+        "Electric Vehicle Maintenance",
+        "Battery Diagnostics",
+        "High-Voltage Systems",
+        "Charging Infrastructure",
+        "Software Updates"
+      ]
+    },
+    {
+      "@type": "AutoPartsStore",
+      "name": "EV Parts",
+      "telephone": "+1-650-555-0203"
+    }
+  ],
+
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "Sustainability Certification",
+      "value": "LEED Gold Certified Facility"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "Renewable Energy",
+      "value": "100% solar-powered facility"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "Carbon Neutral",
+      "value": "Certified carbon-neutral operations since 2022"
+    }
+  ],
+
+  "sameAs": [
+    "https://www.facebook.com/PaloAltoFordEV",
+    "https://twitter.com/PaloAltoFordEV",
+    "https://www.instagram.com/paloaltofordev",
+    "https://www.youtube.com/c/PaloAltoFordEV"
+  ]
+}

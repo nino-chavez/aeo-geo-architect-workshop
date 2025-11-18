@@ -1,0 +1,74 @@
+erDiagram
+    %% FordDirect Dealer Entity Registry - Entity Relationship Diagram
+    %% TODO: Complete this diagram with all entities, attributes, and relationships
+
+    %% === CORE ENTITIES ===
+
+    %% TODO: Complete DEALER entity with all attributes
+    DEALER {
+        uuid dealer_id PK
+        string legal_name
+        string dba_name
+        string dealer_code UK
+        string dealer_type "metro|rural|specialty|dealership_group|ev_focused"
+        %% TODO: Add website_url
+        %% TODO: Add phone
+        %% TODO: Add email
+        %% TODO: Add social_media (JSONB)
+        %% TODO: Add brands (JSONB - Ford, Lincoln, both)
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% TODO: Complete LOCATION entity
+    LOCATION {
+        uuid location_id PK
+        uuid dealer_id FK
+        %% TODO: Add address_line1
+        %% TODO: Add address_line2
+        %% TODO: Add city
+        %% TODO: Add state
+        %% TODO: Add zip
+        %% TODO: Add country
+        %% TODO: Add geo_point (PostGIS GEOGRAPHY)
+        %% TODO: Add is_primary (boolean)
+        %% TODO: Add hours (JSONB)
+        %% TODO: Add amenities (JSONB)
+        timestamp created_at
+    }
+
+    %% TODO: Create INVENTORY entity
+    %% Should include: inventory_id, dealer_id, vin, year, make, model, trim, msrp, dealer_price, status, features, arrival_date, etc.
+
+    %% TODO: Create VEHICLE_SPEC entity (reference data)
+    %% Should include: spec_id, year, make, model, trim, body_type, drivetrain, engine, mpg_city, mpg_highway, towing_capacity, etc.
+
+    %% TODO: Create REVIEW entity
+    %% Should include: review_id, dealer_id, source, external_id, rating, review_text, author_name, review_date, dealer_response, response_date, etc.
+
+    %% TODO: Create SERVICE_CAPABILITY entity
+    %% Should include: capability_id, dealer_id, service_type, is_certified, description, etc.
+
+    %% TODO: Create DEALERSHIP_GROUP entity (for multi-location dealers)
+    %% Should include: group_id, group_name, headquarters_city, total_locations, etc.
+
+    %% TODO: Create SPECIAL_OFFERING entity (fleet sales, EV charging, commercial upfitting)
+    %% Should include: offering_id, dealer_id, offering_type, description, etc.
+
+    %% === RELATIONSHIPS ===
+
+    %% Defined relationships (TODO: Add more)
+    DEALER ||--o{ LOCATION : "has locations"
+
+    %% TODO: Add relationship: DEALER ||--o{ INVENTORY : "stocks vehicles"
+    %% TODO: Add relationship: INVENTORY }o--|| VEHICLE_SPEC : "references specification"
+    %% TODO: Add relationship: DEALER ||--o{ REVIEW : "receives reviews"
+    %% TODO: Add relationship: DEALER ||--o{ SERVICE_CAPABILITY : "offers services"
+    %% TODO: Add relationship: DEALER }o--o| DEALERSHIP_GROUP : "belongs to group"
+    %% TODO: Add relationship: DEALER ||--o{ SPECIAL_OFFERING : "provides offerings"
+
+    %% === NOTES ===
+    %% - Use PostGIS for geospatial queries (geo_point field)
+    %% - Use JSONB for flexible attributes (hours, amenities, features, social_media)
+    %% - Ensure proper indexing for performance (will be defined in database-schema.sql)
+    %% - Align entity attributes with Schema.org properties (for JSON-LD generation)
